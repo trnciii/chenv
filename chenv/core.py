@@ -71,7 +71,7 @@ def main():
 
 	subparsers.add_parser('setup').set_defaults(handler=lambda _:print(setup()))
 
-	subparsers.add_parser('file').set_defaults(handler=lambda _:print(file()))
+	subparsers.add_parser('file').set_defaults(handler=lambda _:print(file() if os.path.exists(file()) else 'not exit'))
 
 	subparsers.add_parser('keys').set_defaults(handler=lambda _:print(' '.join(load().keys())))
 
