@@ -27,6 +27,13 @@ def add(key, path):
 	save(table)
 
 
+def ls(keys=False):
+	if keys:
+		print(' '.join(load().keys()))
+	else:
+		pprint.pprint(load())
+
+
 def setup():
 	return '''
 chenv(){
@@ -46,7 +53,7 @@ _chenv(){
     _chenv_init_completion -n :/ || return
   fi
 
-	COMPREPLY=( $(compgen -W "$(chenv-core keys)" -- "$cur") )
+	COMPREPLY=( $(compgen -W "$(chenv-core list --keys)" -- "$cur") )
 }
 
 complete -F _chenv chenv
@@ -67,13 +74,12 @@ def main():
 	p.set_defaults(handler=lambda args:add(args.key, os.path.abspath(args.path)))
 
 	p = subparsers.add_parser('list')
-	p.set_defaults(handler=lambda _:pprint.pprint(load()))
+	p.add_argument('--keys', action='store_true')
+	p.set_defaults(handler=lambda args:ls(args.keys))
 
 	subparsers.add_parser('setup').set_defaults(handler=lambda _:print(setup()))
 
 	subparsers.add_parser('file').set_defaults(handler=lambda _:print(file() if os.path.exists(file()) else 'not exit'))
-
-	subparsers.add_parser('keys').set_defaults(handler=lambda _:print(' '.join(load().keys())))
 
 
 	args = parser.parse_args()
