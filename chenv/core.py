@@ -40,17 +40,13 @@ chenv(){
 	. "$(chenv-core activator $1)"
 }
 
-_chenv_init_completion(){
-  COMPREPLY=()
-  _get_comp_words_by_ref "$@" cur prev words cword
-}
-
 _chenv(){
   local cur prev words cword split
   if declare -F _init_completion >/dev/null 2>&1; then
-    _init_completion -n :/ || return
+    _init_completion -n / || return
   else
-    _chenv_init_completion -n :/ || return
+	  COMPREPLY=()
+	  _get_comp_words_by_ref -n / cur prev words cword || return
   fi
 
 	COMPREPLY=( $(compgen -W "$(chenv-core list --keys)" -- "$cur") )
